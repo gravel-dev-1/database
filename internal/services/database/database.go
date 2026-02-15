@@ -2,7 +2,9 @@ package database
 
 import (
 	"context"
+	"os"
 
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +17,7 @@ type Service struct {
 func (s *Service) String() string { return ServiceName }
 
 func (s *Service) Start(context.Context) (err error) {
-	s.DB, err = gorm.Open(&noOpDialector{})
+	s.DB, err = gorm.Open(sqlite.Open(os.Getenv("DB_PATH")))
 	if err != nil {
 		return err
 	}

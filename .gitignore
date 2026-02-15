@@ -26,3 +26,6 @@ dist-ssr
 air
 .env*
 !.env.example
+internal/vite/build/*
+
+database.sqlite
