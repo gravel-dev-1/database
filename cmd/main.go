@@ -8,6 +8,7 @@ import (
 
 	"gravel/internal/env"
 	"gravel/internal/http/routes"
+	"gravel/internal/services/database"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
@@ -20,9 +21,10 @@ func (fn Validator) Validate(out any) error { return fn(out) }
 
 func main() {
 	app := fiber.New(fiber.Config{
-		AppName:  env.Get("APP_NAME"),
+		AppName: env.Get("APP_NAME"),
 		Services: []fiber.Service{
 			// Insert services here
+			&database.Service{},
 		},
 		StructValidator: Validator(validator.New().Struct),
 	})
