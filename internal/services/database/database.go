@@ -2,7 +2,10 @@ package database
 
 import (
 	"context"
+	"fmt"
+	"os"
 
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +18,14 @@ type Service struct {
 func (s *Service) String() string { return ServiceName }
 
 func (s *Service) Start(context.Context) (err error) {
-	s.DB, err = gorm.Open(&noOpDialector{})
+	s.DB, err = gorm.Open(postgres.Open(fmt.Sprintf(
+		"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"),
+	)))
 	if err != nil {
 		return err
 	}
