@@ -7,11 +7,11 @@ import (
 	"os"
 	"os/exec"
 
-	"gravel/internal/services/env"
+	"gravel/internal/env"
 )
 
 var (
-	//go:embed build/*
+	//go:embed build/**/*
 	productionFS embed.FS
 	FS           fs.FS
 )
@@ -27,7 +27,7 @@ func (s *Service) Start(context.Context) (err error) {
 	}
 
 	FS = &fss{[]fs.FS{os.DirFS("internal/services/vite/dev"), os.DirFS("public")}}
-	cmd := exec.Command(env.Get("JS_RUNTIME", "node"), "node_modules/vite/bin/vite", "--host")
+	cmd := exec.Command("node", "node_modules/vite/bin/vite", "--host")
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 	return cmd.Start()
 }

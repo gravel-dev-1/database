@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"gravel/internal/env"
 	"gravel/internal/http/routes"
-	"gravel/internal/services/env"
 	"gravel/internal/services/vite"
 
 	"github.com/go-playground/validator/v10"
@@ -21,8 +21,8 @@ func (fn Validator) Validate(out any) error { return fn(out) }
 
 func main() {
 	app := fiber.New(fiber.Config{
+		AppName: env.Get("APP_NAME"),
 		Services: []fiber.Service{
-			&env.Service{},
 			&vite.Service{},
 		},
 		StructValidator: Validator(validator.New().Struct),
@@ -34,7 +34,7 @@ func main() {
 	defer stop()
 
 	go func() {
-		if err := app.Listen(env.Get("LISTEN_ADDR"), fiber.ListenConfig{GracefulContext: ctx}); err != nil {
+		if err := app.Listen(config.Env("LISTEN_ADDR"), fiber.ListenConfig{GracefulContext: ctx}); err != nil {
 			log.Println(err)
 		}
 	}()
