@@ -9,7 +9,7 @@ import (
 
 var FS fs.FS
 
-//go:embed build
+//go:embed build/* build/**/*
 var productionFS embed.FS
 
 func init() { FS, _ = fs.Sub(productionFS, "build") }
